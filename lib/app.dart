@@ -12,21 +12,48 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:Shrine/category_menu_page.dart';
 import 'package:Shrine/supplemental/cut_corners_border.dart';
 import 'package:flutter/material.dart';
 
 import 'home.dart';
+import 'backdrop.dart';
 import 'login.dart';
 import 'colors.dart';
+import 'model/product.dart';
 
-// TODO: Convert ShrineApp to stateful widget (104)
-class ShrineApp extends StatelessWidget {
+class ShrineApp extends StatefulWidget {
+  @override
+  _ShrineAppState createState() => _ShrineAppState();
+}
+
+class _ShrineAppState extends State<ShrineApp> {
+  var _currentCategory = Category.all;
+
+  void _onCategoryTap(Category category) {
+    setState(() {
+      _currentCategory = category;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Shrine',
-      // TODO: Change home: to a Backdrop with a HomePage frontLayer (104)
-      home: HomePage(),
+
+      home: Backdrop(
+        currentCategory: Category.all,
+        frontLayer: HomePage(
+          category: _currentCategory,
+        ),
+        backLayer: CategoryMenuPage(
+          currentCategory: _currentCategory,
+          onCategoryTap: _onCategoryTap,
+        ),
+        frontTitle: Text('SHRINE'),
+        backTitle: Text('MENU'),
+      ),
+
       // TODO: Make currentCategory field take _currentCategory (104)
       // TODO: Pass _currentCategory for frontLayer (104)
       // TODO: Change backLayer field value to CategoryMenuPage (104)
@@ -56,7 +83,7 @@ ThemeData _buildShrineTheme() {
   final base = ThemeData.light();
   return base.copyWith(
     accentColor: kShrineBrown900,
-    primaryColor: kShrinePurple,
+    primaryColor: kShrinePink100,
     buttonTheme: base.buttonTheme.copyWith(
       buttonColor: kShrinePurple,
       textTheme: ButtonTextTheme.primary,
@@ -68,7 +95,7 @@ ThemeData _buildShrineTheme() {
     textTheme: _buildShrineTextTheme(base.textTheme),
     primaryTextTheme: _buildShrineTextTheme(base.primaryTextTheme),
     accentTextTheme: _buildShrineTextTheme(base.accentTextTheme),
-    primaryIconTheme: base.iconTheme.copyWith(color: kShrineSurfaceWhite),
+    primaryIconTheme: base.iconTheme.copyWith(color: kShrineBrown900),
     inputDecorationTheme: InputDecorationTheme(
       focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(
@@ -98,5 +125,7 @@ TextTheme _buildShrineTextTheme(TextTheme base) {
       )
       .apply(
         fontFamily: 'Rubik',
+        displayColor: kShrineBrown900,
+        bodyColor: kShrineBrown900,
       );
 }
