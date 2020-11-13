@@ -15,6 +15,7 @@
 import 'dart:js';
 
 import 'package:Shrine/model/products_repository.dart';
+import 'package:Shrine/supplemental/asymmetric_view.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -33,9 +34,11 @@ class HomePage extends StatelessWidget {
     return products
         .map(
           (product) => Card(
+            elevation: 0,
             clipBehavior: Clip.antiAlias,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 AspectRatio(
                   aspectRatio: 16 / 9,
@@ -48,17 +51,20 @@ class HomePage extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
                         product.name,
-                        style: theme.textTheme.headline6,
+                        style: theme.textTheme.button,
+                        softWrap: false,
+                        overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                       ),
-                      SizedBox(height: 8),
+                      SizedBox(height: 4),
                       Text(
                         formatter.format(product.price),
-                        style: theme.textTheme.subtitle2,
+                        style: theme.textTheme.caption,
                       ),
                     ],
                   ),
@@ -78,6 +84,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('SHRINE'),
+        brightness: Brightness.dark,
         leading: IconButton(
           icon: Icon(
             Icons.menu,
@@ -102,13 +109,8 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-      body: GridView.count(
-        crossAxisCount: 2,
-        padding: EdgeInsets.all(16),
-        childAspectRatio: 8 / 9,
-        children: _buildGridCards(context),
-      ),
-      resizeToAvoidBottomInset: false,
+      body: AsymmetricView(
+          products: ProductsRepository.loadProducts(Category.all)),
     );
   }
 }
